@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhoenixCP - Login</title>
+
+  <!-- Favicon for Tab Icon -->
+  <link rel="icon" type="image/png"
+    href="https://raw.githubusercontent.com/ThePhoenixDevX/PhoenixCP/refs/heads/main/transperentphoenx.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,300,600,400,700&display=swap" rel="stylesheet">
+
+  <style>
+    #bubbleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+
+  <style>
+    /* Background canvas effect */
+    #bubbleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Smooth glow on buttons and links */
+    a:hover,
+    button:hover {
+      box-shadow: 0 0 12px rgba(99, 255, 155, 15);
+      transition: box-shadow 0.3s ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-cover bg-center text-gray-300 min-h-screen flex flex-col"
+  style="background-image: url('https://raw.githubusercontent.com/ThePhoenixDevX/PhoenixCP/refs/heads/main/loginpagebackground.png');">
+
+  <canvas id="bubbleCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+
+  <main class="flex-grow flex items-center justify-start pl-12 p-8 relative">
+    <div class="py-8 px-6 md:py-12 md:px-10 max-w-md w-full bg-black/40 backdrop-blur-lg rounded-2xl shadow-lg">
+
+      <!-- Phoenix Logo -->
+      <div class="flex justify-center mb-6">
+        <img src="https://raw.githubusercontent.com/ThePhoenixDevX/PhoenixCP/refs/heads/main/transperentphoenx.png"
+          alt="Phoenix Logo" class="w-20 h-20">
+      </div>
+
+      <!-- Welcome Heading and Text -->
+      <h2 class="text-center text-3xl md:text-4xl font-extrabold text-white tracking-tight">Welcome back!</h2>
+      <p class="text-center text-gray-400 mt-2 text-sm md:text-base">Sign in to your account to continue</p>
+
+      <!-- User/Password Login Form -->
+      <form method="GET" action="/auth/login" class="mt-8 space-y-4">
+        <div>
+          <input type="text" id="username" name="username"
+            class="p-3 w-full bg-white/10 border border-white/20 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400"
+            placeholder="Username" required>
+        </div>
+        <div>
+          <input type="password" id="password" name="password"
+            class="p-3 w-full bg-white/10 border border-white/20 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400"
+            placeholder="Password" required>
+        </div>
+        <button type="submit"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition duration-300">
+          <span>Sign in</span>
+        </button>
+      </form>
+
+      <!-- Discord Invite Button -->
+      <div class="flex justify-center mt-6">
+        <a href="https://discord.gg/YOUR_INVITE_LINK" target="_blank">
+          <button
+            class="flex items-center bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg">
+            <img src="https://raw.githubusercontent.com/ThePhoenixDevX/PhoenixCP/refs/heads/main/transperentphoenx.png"
+              alt="Phoenix Logo" class="w-6 h-6 mr-2">
+            <span>Join Now On Discord</span>
+          </button>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bubble Animation Script -->
+  <script>
+    const bubbleCanvas = document.getElementById("bubbleCanvas");
+    const ctx = bubbleCanvas.getContext("2d");
+
+    bubbleCanvas.width = window.innerWidth;
+    bubbleCanvas.height = window.innerHeight;
+
+    let bubblesArray = [];
+
+    class Bubble {
+      constructor(x, y, size, speedX, speedY) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.speedX = speedX;
+        this.speedY = speedY;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x + this.size > bubbleCanvas.width || this.x - this.size < 0) {
+          this.speedX = -this.speedX;
+        }
+        if (this.y + this.size > bubbleCanvas.height || this.y - this.size < 0) {
+          this.speedY = -this.speedY;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.stroke();
+      }
+    }
+
+    function createBubbles(count) {
+      for (let i = 0; i < count; i++) {
+        let size = Math.random() * 20 + 5;
+        let x = Math.random() * (bubbleCanvas.width - size * 2) + size;
+        let y = Math.random() * (bubbleCanvas.height - size * 2) + size;
+        let speedX = (Math.random() - 0.5) * 1.5;
+        let speedY = (Math.random() - 0.5) * 1.5;
+
+        bubblesArray.push(new Bubble(x, y, size, speedX, speedY));
+      }
+    }
+
+    function handleBubbles() {
+      for (let i = 0; i < bubblesArray.length; i++) {
+        bubblesArray[i].update();
+        bubblesArray[i].draw();
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
+      handleBubbles();
+      requestAnimationFrame(animateBubbles);
+    }
+
+    createBubbles(50);
+    animateBubbles();
+
+    window.addEventListener("resize", () => {
+      bubbleCanvas.width = window.innerWidth;
+      bubbleCanvas.height = window.innerHeight;
+      bubblesArray = [];
+      createBubbles(50);
+    });
+  </script>
+
+</body>
+
+</html>
